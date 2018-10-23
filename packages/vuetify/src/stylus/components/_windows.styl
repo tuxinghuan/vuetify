@@ -3,7 +3,7 @@
 .v-window
   &__container
     position: relative
-    transition: .3s cubic-bezier(.25, .8, .50, 1)
+    transition: .3s $transition.fast-out-slow-in
 
     &--is-active
       overflow: hidden
@@ -14,7 +14,7 @@
   &-y-reverse-transition
     &-enter-active,
     &-leave-active
-      transition: .3s cubic-bezier(.25, .8, .50, 1)
+      transition: .3s $transition.fast-out-slow-in
 
     &-leave,
     &-leave-to

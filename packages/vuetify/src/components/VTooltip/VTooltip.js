@@ -20,7 +20,7 @@ export default {
   props: {
     closeDelay: {
       type: [Number, String],
-      default: 200
+      default: 1500
     },
     debounce: {
       type: [Number, String],
@@ -33,7 +33,7 @@ export default {
     },
     openDelay: {
       type: [Number, String],
-      default: 200
+      default: 75
     },
     tag: {
       type: String,
@@ -108,10 +108,8 @@ export default {
     },
     computedTransition () {
       if (this.transition) return this.transition
-      if (this.top) return 'slide-y-reverse-transition'
-      if (this.right) return 'slide-x-transition'
-      if (this.bottom) return 'slide-y-transition'
-      if (this.left) return 'slide-x-reverse-transition'
+
+      return this.isActive ? 'scale-transition' : 'fade-transition'
     },
     offsetY () {
       return this.top || this.bottom
@@ -123,7 +121,6 @@ export default {
       return {
         left: this.calculatedLeft,
         maxWidth: convertToUnit(this.maxWidth),
-        opacity: this.isActive ? 0.9 : 0,
         top: this.calculatedTop,
         zIndex: this.zIndex || this.activeZIndex
       }
@@ -144,6 +141,10 @@ export default {
       this.updateDimensions()
       // Start the transition
       requestAnimationFrame(this.startTransition)
+      this.runDelay('close', () => (this.isActive = false))
+    },
+    deactivate () {
+      this.isActive = false
     },
     genActivator () {
       const listeners = this.disabled ? {} : {
@@ -153,7 +154,8 @@ export default {
         },
         mouseleave: e => {
           this.getActivator(e)
-          this.runDelay('close', () => (this.isActive = false))
+          this.clearDelay()
+          this.isActive = false
         }
       }
 
